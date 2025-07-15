@@ -10,43 +10,43 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as FundingResourcesIndexRouteImport } from './routes/funding-resources/index'
+import { Route as FundingSourcesIndexRouteImport } from './routes/funding-sources/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FundingResourcesIndexRoute = FundingResourcesIndexRouteImport.update({
-  id: '/funding-resources/',
-  path: '/funding-resources/',
+const FundingSourcesIndexRoute = FundingSourcesIndexRouteImport.update({
+  id: '/funding-sources/',
+  path: '/funding-sources/',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/funding-resources': typeof FundingResourcesIndexRoute
+  '/funding-sources': typeof FundingSourcesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/funding-resources': typeof FundingResourcesIndexRoute
+  '/funding-sources': typeof FundingSourcesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/funding-resources/': typeof FundingResourcesIndexRoute
+  '/funding-sources/': typeof FundingSourcesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/funding-resources'
+  fullPaths: '/' | '/funding-sources'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/funding-resources'
-  id: '__root__' | '/' | '/funding-resources/'
+  to: '/' | '/funding-sources'
+  id: '__root__' | '/' | '/funding-sources/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  FundingResourcesIndexRoute: typeof FundingResourcesIndexRoute
+  FundingSourcesIndexRoute: typeof FundingSourcesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -58,11 +58,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/funding-resources/': {
-      id: '/funding-resources/'
-      path: '/funding-resources'
-      fullPath: '/funding-resources'
-      preLoaderRoute: typeof FundingResourcesIndexRouteImport
+    '/funding-sources/': {
+      id: '/funding-sources/'
+      path: '/funding-sources'
+      fullPath: '/funding-sources'
+      preLoaderRoute: typeof FundingSourcesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -70,7 +70,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  FundingResourcesIndexRoute: FundingResourcesIndexRoute,
+  FundingSourcesIndexRoute: FundingSourcesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

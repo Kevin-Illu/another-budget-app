@@ -8,6 +8,7 @@ import {useCallback, useEffect} from "react";
 
 const fundingSchema = yup.object({
 	amount: yup.number().positive().min(1).required('Please enter amount'),
+	name: yup.string().required('Please enter a name'),
 	description: yup.string().required('Please enter a description'),
 	id: yup.number().nullable()
 })
@@ -17,6 +18,7 @@ export default function FundingSourcesForm({fundingSourceTemp}: { fundingSourceT
 	const clearForm = () =>
 			fundingSource.setValues({
 				amount: 0,
+				name: '',
 				description: '',
 				id: null
 			})
@@ -24,7 +26,8 @@ export default function FundingSourcesForm({fundingSourceTemp}: { fundingSourceT
 	const fundingSource = useFormik<FundingSchemaType>({
 		initialValues: fundingSourceTemp ?? {
 			amount: 0,
-			description: ''
+			description: '',
+			name: ''
 		},
 		validationSchema: fundingSchema,
 		onSubmit: ({id, ...values}) => {
@@ -55,6 +58,20 @@ export default function FundingSourcesForm({fundingSourceTemp}: { fundingSourceT
 	return (
 			<form onSubmit={fundingSource.handleSubmit}>
 				<Flex direction="column" gap="3">
+					<label>
+						<Text as="div" size="2" mb="1" weight="bold">Name</Text>
+						<TextField.Root
+								placeholder="Name of funding source"
+								required
+								id="name"
+								onChange={fundingSource.handleChange}
+								value={fundingSource.values.name}
+						/>
+
+						{fundingSource.errors.name && fundingSource.touched.name ? (
+								<Text color="red" size="1">{fundingSource.errors.name}</Text>
+						) : null}
+					</label>
 					<label>
 						<Text as="div" size="2" mb="1" weight="bold">Amount</Text>
 						<TextField.Root
