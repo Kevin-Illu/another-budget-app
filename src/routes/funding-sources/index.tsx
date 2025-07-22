@@ -1,50 +1,77 @@
-import {createFileRoute} from '@tanstack/react-router'
-import {useState} from "react";
-import {Box, Card, Container, Flex, Heading, Separator} from "@radix-ui/themes";
-import {removeFundingSource, useFundingSource} from "../../services/fouding-sources.service.ts";
-import type {FundingSource} from "../../infraestructure/database/db.ts";
-import FundingSourcesForm from "../../components/funding-sources/funding-sources.form.tsx";
+import { createFileRoute } from '@tanstack/react-router'
+import { useState } from "react";
+import { addFundingSource, removeFundingSource, updateFundingSource, useFundingSource } from "../../services/fouding-sources.service.ts";
+import type { FundingSource, NewFundingSource } from "../../infraestructure/database/db.ts";
 import FundingSourcesTable from "../../components/funding-sources/funding-sources.table.tsx";
-import ExpensesForm from "../../components/expenses/expenses.form.tsx";
+import { Box, Button, Dialog } from '@mui/material';
+import AddCardRoundedIcon from '@mui/icons-material/AddCardRounded';
+import FundingSourcesForm from '../../components/funding-sources/funding-sources.form.tsx';
 
 export const Route = createFileRoute('/funding-sources/')({
 	component: RouteComponent,
 })
 
 function RouteComponent() {
-	const {fundingSources} = useFundingSource()
+	const { fundingSources } = useFundingSource()
 	const [fsTemp, setFsTemp] = useState<FundingSource | null>(null);
+	const [open, setOpen] = useState(false);
+
+	const handleClose = () => {
+		setOpen(false);
+
+		setTimeout(() => {
+			setFsTemp(null);
+		}, 300)
+	};
+	const handleOpen = () => {
+		setOpen(true);
+	};
+	const handleEdit = (fs: FundingSource) => {
+		setFsTemp(fs);
+		handleOpen();
+	}
+
+	const handleSubmit = (fs: FundingSource | NewFundingSource) => {
+		const { id, ...values } = fs as FundingSource;
+
+		if (id) {
+			updateFundingSource(id, values).then(() => {
+
+			});
+			setOpen(false);
+			setFsTemp(null);
+			return;
+		}
+
+		addFundingSource({
+			...values,
+			currency: "GTQ",
+		})
+		setOpen(false);
+	}
 
 	return (
-			<Container>
-				<Box className="min-h-full">
-					<Box className="my-8">
-						<Flex direction="row" justify="between" align="center">
-							<Box>
-								<Heading>Your funding sources</Heading>
-							</Box>
-						</Flex>
-					</Box>
+		<Box>
+			<div className='flex justify-between items-center text-gray-500'>
+				<h4>Your funding sources</h4>
+				<div>
+					<Button size='small' endIcon={<AddCardRoundedIcon />}
+						variant="text" color='inherit' onClick={handleOpen}>
+						<p>Add funding source</p>
+					</Button>
+				</div>
+			</div>
 
-					<Separator my="3" size="4"/>
+			<Box sx={{ pt: 4 }}>
+				<FundingSourcesTable
+					fundingSources={fundingSources}
+					removeFundingSource={removeFundingSource}
+					onEdit={handleEdit} />
+			</Box>
 
-					<Flex direction="row" justify="between" gap="3" className="my-8">
-						<Card className="w-4/12 h-full">
-							<FundingSourcesForm fundingSourceTemp={fsTemp}/>
-						</Card>
-
-						<FundingSourcesTable
-								fundingSources={fundingSources}
-								removeFundingSource={removeFundingSource}
-								setFsTemp={setFsTemp}/>
-					</Flex>
-
-					<Flex>
-						<Card className="w-4/12 h-full">
-							<ExpensesForm expense={null}/>
-						</Card>
-					</Flex>
-				</Box>
-			</Container>
+			<Dialog onClose={handleClose} open={open}>
+				<FundingSourcesForm fundingSourceTemp={fsTemp} onSubmit={handleSubmit} />
+			</Dialog>
+		</Box>
 	)
 }

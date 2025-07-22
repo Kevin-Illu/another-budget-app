@@ -1,48 +1,44 @@
-import {Box, Flex, IconButton, Table} from "@radix-ui/themes";
-import type {FundingSource} from "../../infraestructure/database/db.ts";
-import {Pencil1Icon, TrashIcon} from "@radix-ui/react-icons";
+import { Card, CardActionArea, Grid, IconButton } from "@mui/material";
+import type { FundingSource } from "../../infraestructure/database/db.ts";
+import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
+import './funding-source.styles.css';
 
-export default function FundingSourcesTable({fundingSources, removeFundingSource, setFsTemp}: {
+export default function FundingSourcesTable({ fundingSources, removeFundingSource, onEdit }: {
 	fundingSources: FundingSource[] | undefined,
 	removeFundingSource: (id: number) => void,
-	setFsTemp: (fs: FundingSource) => void
+	onEdit: (fs: FundingSource) => void
 }) {
 	return (
-			<Table.Root variant="surface" className="w-full">
-				<Table.Header>
-					<Table.Row>
-						<Table.ColumnHeaderCell>Name</Table.ColumnHeaderCell>
-						<Table.ColumnHeaderCell>Currency</Table.ColumnHeaderCell>
-						<Table.ColumnHeaderCell>Amount</Table.ColumnHeaderCell>
-						<Table.ColumnHeaderCell>Description</Table.ColumnHeaderCell>
-						<Table.ColumnHeaderCell justify="end">Ops.</Table.ColumnHeaderCell>
-					</Table.Row>
-				</Table.Header>
+		<Grid rowSpacing={2} columnSpacing={2} container>
+			{fundingSources?.map((fs, idx) => (
+				<Grid key={fs.id} size={6} sx={{
+					opacity: 0,
+					animation: 'fadeInUp 0.5s ease forwards',
+					animationDelay: `${idx * 0.1}s`
+				}}>
+					<Card sx={{ boxShadow: 'none' }}>
+						<CardActionArea onClick={() => onEdit(fs)}>
+							<div className="p-6 bg-stone-100 rounded-xl">
+								<div className="flex justify-between items-center">
+									<div>
+										<h5 className="font-bold uppercase text-gray-700">{fs.name}</h5>
+										<p className="text-gray-600">{fs.description}</p>
+									</div>
 
-				<Table.Body>
-					{fundingSources?.length ? fundingSources.map((fs) => (
-							<Table.Row key={fs.id}>
-								<Table.RowHeaderCell>{fs.name}</Table.RowHeaderCell>
-								<Table.Cell>{fs.currency}</Table.Cell>
-								<Table.Cell>{fs.amount}</Table.Cell>
-								<Table.Cell>{fs.description}</Table.Cell>
-								<Table.Cell justify="end">
-									<Flex gap="2" direction="row-reverse">
-										<IconButton color="red" variant="soft" onClick={() => removeFundingSource(fs.id)}>
-											<TrashIcon/>
-										</IconButton>
-										<IconButton color="indigo" variant="soft" onClick={() => setFsTemp(fs)}>
-											<Pencil1Icon/>
-										</IconButton>
-									</Flex>
-								</Table.Cell>
-							</Table.Row>
-					)) : (
-							<Table.Row>
-								<Table.Cell><Box>There are no sources yet</Box></Table.Cell>
-							</Table.Row>
-					)}
-				</Table.Body>
-			</Table.Root>
+									<div className="flex flex-col justify-between items-end gap-4">
+										<div className="flex gap-2 justify-end items-center">
+											<IconButton onClick={() => removeFundingSource(fs.id)} size="small" aria-label="remove funding source">
+												<CancelRoundedIcon color="error" />
+											</IconButton>
+										</div>
+										<p className="text-gray-700 font-semibold text-3xl">{fs.amount} {fs.currency}</p>
+									</div>
+								</div>
+							</div>
+						</CardActionArea>
+					</Card>
+				</Grid>
+			))}
+		</Grid>
 	)
 }

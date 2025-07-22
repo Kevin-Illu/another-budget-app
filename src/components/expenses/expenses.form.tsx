@@ -2,7 +2,6 @@ import type {Expense} from "../../infraestructure/database/db.ts";
 import {useFormik} from "formik";
 import expenseSchema, {type ExpenseSchema} from "./expense.schema.ts";
 import dayjs from "dayjs";
-import {Box, Button, Flex, Select, Switch, Text, TextField} from "@radix-ui/themes";
 
 const defaultValues: Expense = {
 	id: 0,
