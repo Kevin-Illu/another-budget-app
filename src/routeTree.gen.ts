@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as FundingSourcesIndexRouteImport } from './routes/funding-sources/index'
+import { Route as ExpensesIndexRouteImport } from './routes/expenses/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,30 +23,39 @@ const FundingSourcesIndexRoute = FundingSourcesIndexRouteImport.update({
   path: '/funding-sources/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ExpensesIndexRoute = ExpensesIndexRouteImport.update({
+  id: '/expenses/',
+  path: '/expenses/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/expenses': typeof ExpensesIndexRoute
   '/funding-sources': typeof FundingSourcesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/expenses': typeof ExpensesIndexRoute
   '/funding-sources': typeof FundingSourcesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/expenses/': typeof ExpensesIndexRoute
   '/funding-sources/': typeof FundingSourcesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/funding-sources'
+  fullPaths: '/' | '/expenses' | '/funding-sources'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/funding-sources'
-  id: '__root__' | '/' | '/funding-sources/'
+  to: '/' | '/expenses' | '/funding-sources'
+  id: '__root__' | '/' | '/expenses/' | '/funding-sources/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ExpensesIndexRoute: typeof ExpensesIndexRoute
   FundingSourcesIndexRoute: typeof FundingSourcesIndexRoute
 }
 
@@ -65,11 +75,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FundingSourcesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/expenses/': {
+      id: '/expenses/'
+      path: '/expenses'
+      fullPath: '/expenses'
+      preLoaderRoute: typeof ExpensesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ExpensesIndexRoute: ExpensesIndexRoute,
   FundingSourcesIndexRoute: FundingSourcesIndexRoute,
 }
 export const routeTree = rootRouteImport

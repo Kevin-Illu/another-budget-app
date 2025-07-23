@@ -1,5 +1,5 @@
 // db.ts
-import Dexie, {type EntityTable} from 'dexie';
+import Dexie, { type EntityTable } from 'dexie';
 
 interface FundingSource {
 	id: number;
@@ -19,8 +19,8 @@ interface Expense {
 	description: string;
 	currency: "GTQ";
 	frequency: Frequency;
-	nextDueDate: string;
-	startDate: string;
+	nextDueDate?: string | null;
+	startDate?: string | null;
 	isRecurring: boolean;
 	endDate?: string | null;
 }
@@ -29,8 +29,8 @@ type NewExpense = Omit<Expense, 'id'>;
 
 const db = new Dexie('v3') as Dexie & {
 	funding_source: EntityTable<
-			FundingSource,
-			'id'
+		FundingSource,
+		'id'
 	>;
 	expense: EntityTable<Expense, 'id'>
 };
@@ -41,5 +41,5 @@ db.version(1).stores({
 	expense: "++id, amount, description, currency, frequency, nextDueDate, startDate, isRecurring, endDate, name",
 });
 
-export type {FundingSource, Expense, NewFundingSource, NewExpense};
-export {db};
+export type { FundingSource, Expense, NewFundingSource, NewExpense, Frequency };
+export { db };

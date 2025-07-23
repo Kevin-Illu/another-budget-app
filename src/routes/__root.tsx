@@ -14,6 +14,7 @@ import IconButton from '@mui/material/IconButton';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { ListItemIcon } from '@mui/material';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import CreditCardRoundedIcon from '@mui/icons-material/CreditCardRounded';
 
 const drawerWidth = 240;
 
@@ -22,7 +23,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   const canGoBack = useCanGoBack()
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', height: '100vh', width: '100vw' }}>
       <CssBaseline />
       <AppBar
         position="fixed"
@@ -54,11 +55,21 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           <ListItem>
             <ListItemButton onClick={() => router.navigate({ to: '/funding-sources' })}>
               <ListItemIcon>
-                <AttachMoneyIcon />
+                <CreditCardRoundedIcon />
               </ListItemIcon>
               <ListItemText primary="Funding" />
             </ListItemButton>
           </ListItem>
+
+          <ListItem>
+            <ListItemButton onClick={() => router.navigate({ to: '/expenses' })}>
+              <ListItemIcon>
+                <AttachMoneyIcon />
+              </ListItemIcon>
+              <ListItemText primary="Expenses" />
+            </ListItemButton>
+          </ListItem>
+
         </List>
       </Drawer>
       <Box
@@ -66,7 +77,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
       >
         <Toolbar />
-        <Box sx={{ p: 2 }}>
+        <Box sx={{ p: 2, height: '90%', width: '100%' }}>
           {children}
           <TanStackRouterDevtools />
         </Box>

@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useState } from "react";
 import { addFundingSource, removeFundingSource, updateFundingSource, useFundingSource } from "../../services/fouding-sources.service.ts";
 import type { FundingSource, NewFundingSource } from "../../infraestructure/database/db.ts";
-import FundingSourcesTable from "../../components/funding-sources/funding-sources.table.tsx";
+import FundingSourcesGrid from "../../components/funding-sources/funding-sources.grid.tsx";
 import { Box, Button, Dialog } from '@mui/material';
 import AddCardRoundedIcon from '@mui/icons-material/AddCardRounded';
 import FundingSourcesForm from '../../components/funding-sources/funding-sources.form.tsx';
@@ -35,9 +35,7 @@ function RouteComponent() {
 		const { id, ...values } = fs as FundingSource;
 
 		if (id) {
-			updateFundingSource(id, values).then(() => {
-
-			});
+			updateFundingSource(id, values);
 			setOpen(false);
 			setFsTemp(null);
 			return;
@@ -63,7 +61,7 @@ function RouteComponent() {
 			</div>
 
 			<Box sx={{ pt: 4 }}>
-				<FundingSourcesTable
+				<FundingSourcesGrid
 					fundingSources={fundingSources}
 					removeFundingSource={removeFundingSource}
 					onEdit={handleEdit} />
