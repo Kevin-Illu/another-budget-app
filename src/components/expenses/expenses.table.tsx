@@ -17,8 +17,8 @@ export default function ExpensesTable(
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
-            <TableCell align="right">Description</TableCell>
-            <TableCell align="right">Frequency</TableCell>
+            <TableCell>Description</TableCell>
+            <TableCell>Frequency</TableCell>
             <TableCell align="right">Amount</TableCell>
             <TableCell align="right">Actions</TableCell>
           </TableRow>
@@ -32,7 +32,7 @@ export default function ExpensesTable(
               <TableCell component="th" scope="row">
                 {row.name}
               </TableCell>
-              <TableCell align="right">
+              <TableCell>
                 <span style={{
                   display: 'inline-block',
                   maxWidth: 220,
@@ -44,7 +44,7 @@ export default function ExpensesTable(
                   {row.description}
                 </span>
               </TableCell>
-              <TableCell align="right">{row.frequency}</TableCell>
+              <TableCell>{row.frequency}</TableCell>
               <TableCell align="right">{row.currency} {row.amount}</TableCell>
               <TableCell align="right">
                 <ButtonGroup variant="outlined" aria-label="Basic button group">

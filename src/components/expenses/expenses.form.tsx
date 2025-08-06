@@ -1,23 +1,24 @@
-import type { Expense, NewExpense } from "../../infraestructure/database/db.ts";
+import type { Expense, FundingSource, NewExpense, NewFundingSource } from "../../infraestructure/database/db.ts";
 import { useFormik } from "formik";
 import expenseSchema, { type ExpenseSchema } from "./expense.schema.ts";
-import { Button, FormControl, IconButton, InputLabel, MenuItem, Select, Switch, TextField } from "@mui/material";
-import { useCallback, useEffect } from "react";
+import { Button, FormControl, MenuItem, Select, Switch, TextField } from "@mui/material";
 import BackspaceRoundedIcon from '@mui/icons-material/BackspaceRounded';
 import { FrequencyList } from "../../infraestructure/consts.ts";
 
-const defaultValues: Expense = {
-	id: 0,
-	amount: 0,
-	name: '',
-	description: '',
-	currency: 'GTQ',
-	frequency: 'daily',
-	nextDueDate: null,
-	startDate: null,
-	isRecurring: false,
-	endDate: null,
-}
+const getExpenseInitialValues = (expense: Expense | null): Expense => ({
+	id: expense?.id ?? 0,
+	amount: expense?.amount ?? 0,
+	name: expense?.name ?? '',
+	description: expense?.description ?? '',
+	currency: expense?.currency ?? 'GTQ',
+	frequency: expense?.frequency ?? 'daily',
+	nextDueDate: expense?.nextDueDate ?? null,
+	startDate: expense?.startDate ?? null,
+	isRecurring: expense?.isRecurring ?? false,
+	endDate: expense?.endDate ?? null,
+	fundingSourceId: expense?.fundingSourceId ?? null
+});
+
 
 export default function ExpensesForm(
 	{ expense, onSubmit }:
@@ -27,42 +28,27 @@ export default function ExpensesForm(
 		}
 ) {
 	const expenseForm = useFormik<ExpenseSchema>({
-		initialValues: expense ?? defaultValues,
+		initialValues: getExpenseInitialValues(expense),
 		validationSchema: expenseSchema,
-		onSubmit: (values: Expense) => {
+		enableReinitialize: true,
+		onSubmit: (values: NewExpense) => {
 			onSubmit({
 				...values,
 				nextDueDate: values.nextDueDate ? new Date(values.nextDueDate).toISOString() : null,
 				startDate: values.startDate ? new Date(values.startDate).toISOString() : null,
 				endDate: values.endDate ? new Date(values.endDate).toISOString() : null,
-			})
-			expenseForm.resetForm();
-			expenseForm.setValues(defaultValues);
-			expenseForm.setTouched({
-				amount: false,
-				name: false,
-				description: false,
-				frequency: false,
-				nextDueDate: false,
-				startDate: false,
-				isRecurring: false,
-				endDate: false,
+				fundingSourceId: values?.fundingSourceId ?? null,
 			});
-			expenseForm.setErrors({});
+
+			const clearedValues = getExpenseInitialValues(null);
+
+			expenseForm.resetForm({
+				values: clearedValues,
+			});
 		}
 	});
 
-	const setFormValues = useCallback((v: Expense) => expenseForm.setValues(v), [])
-
-	const clearForm = () => expenseForm.setValues(defaultValues);
-
-	useEffect(() => {
-		clearForm();
-
-		if (expense) {
-			setFormValues(expense);
-		}
-	}, [expense, setFormValues])
+	const clearForm = () => getExpenseInitialValues(null);
 
 	return (
 		<form onSubmit={expenseForm.handleSubmit}>

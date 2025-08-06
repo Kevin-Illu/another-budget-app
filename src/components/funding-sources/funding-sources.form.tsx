@@ -2,57 +2,44 @@ import * as yup from 'yup';
 import { useFormik } from "formik";
 import type { InferType } from "yup";
 import type { FundingSource, NewFundingSource } from "../../infraestructure/database/db.ts";
-import { useCallback, useEffect } from "react";
-import { Button, DialogTitle, TextField } from '@mui/material';
+import { Button, DialogTitle, Switch, TextField } from '@mui/material';
+
+const getInitialValues = (fs: FundingSource | null): FundingSchemaType => ({
+	amount: fs?.amount ?? 0,
+	name: fs?.name ?? '',
+	description: fs?.description ?? '',
+	id: fs?.id ?? null,
+	isActive: fs?.isActive ?? false,
+});
 
 const fundingSchema = yup.object({
 	amount: yup.number().positive().min(1).required('Please enter amount'),
 	name: yup.string().required('Please enter a name'),
 	description: yup.string().required('Please enter a description'),
-	id: yup.number().nullable()
+	id: yup.number().nullable(),
+	isActive: yup.boolean().default(false)
 })
 type FundingSchemaType = InferType<typeof fundingSchema>
 
 export default function FundingSourcesForm({ fundingSourceTemp, onSubmit }: {
 	fundingSourceTemp: FundingSource | null, onSubmit: (fs: FundingSource | NewFundingSource) => void
 }) {
-	const clearForm = () =>
-		fundingSource.setValues({
-			amount: 0,
-			name: '',
-			description: '',
-			id: null
-		})
-
 	const fundingSource = useFormik<FundingSchemaType>({
-		initialValues: fundingSourceTemp ?? {
-			amount: 0,
-			description: '',
-			name: ''
-		},
+		initialValues: getInitialValues(fundingSourceTemp),
 		validationSchema: fundingSchema,
+		enableReinitialize: true,
 		onSubmit: (fs) => onSubmit({
 			...fs,
 			id: fs.id ?? undefined,
-			currency: "GTQ"
+			currency: "GTQ",
+			createdAt: new Date().toISOString()
 		})
 	});
 
-	const setFormValues = useCallback((v: FundingSource) => fundingSource.setValues(v), [])
-
-	// pathc values
-	useEffect(() => {
-		clearForm();
-
-		if (fundingSourceTemp) {
-			setFormValues(fundingSourceTemp);
-		}
-	}, [fundingSourceTemp, setFormValues]);
-
 	return (
-		<form onSubmit={fundingSource.handleSubmit} className='p-8'>
-			<DialogTitle>
-				<p className='text-gray-600 font-bold uppercase'>Funding source</p>
+		<form onSubmit={fundingSource.handleSubmit} className='p-8 w-96'>
+			<DialogTitle className='flex items-center justify-center'>
+				<p className='text-gray-400 font-semibold uppercase'>Funding source</p>
 			</DialogTitle>
 			<div className='flex flex-col gap-4'>
 				<label className='flex flex-col gap-2'>
@@ -67,21 +54,32 @@ export default function FundingSourcesForm({ fundingSourceTemp, onSubmit }: {
 						<small>{fundingSource.errors.name}</small>
 					) : null}
 				</label>
-				<label className='flex flex-col gap-2'>
-					<TextField
-						variant="outlined"
-						label="Amount"
-						placeholder="Current amount"
-						required
-						id="amount"
-						onChange={fundingSource.handleChange}
-						value={fundingSource.values.amount}
-					/>
+				<div className='flex gap-2 w-full'>
+					<label className='flex-1'>
+						<TextField
+							variant="outlined"
+							label="Amount"
+							placeholder="Current amount"
+							required
+							id="amount"
+							onChange={fundingSource.handleChange}
+							value={fundingSource.values.amount}
+						/>
 
-					{fundingSource.errors.amount && fundingSource.touched.amount ? (
-						<small>{fundingSource.errors.amount}</small>
-					) : null}
-				</label>
+						{fundingSource.errors.amount && fundingSource.touched.amount ? (
+							<small>{fundingSource.errors.amount}</small>
+						) : null}
+					</label>
+
+					<label>
+						<small className="text-gray-500">Is Active</small>
+						<br />
+						<Switch
+							id="isActive"
+							onChange={fundingSource.handleChange}
+							checked={fundingSource.values.isActive} />
+					</label>
+				</div>
 				<label className='flex flex-col gap-2'>
 					<TextField
 						label="Description"

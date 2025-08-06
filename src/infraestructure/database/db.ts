@@ -7,6 +7,9 @@ interface FundingSource {
 	name: string;
 	description: string;
 	currency: "GTQ";
+	isActive?: boolean;
+	createdAt?: string | null;
+	updatedAt?: string | null;
 }
 
 type NewFundingSource = Omit<FundingSource, 'id'>;
@@ -23,6 +26,7 @@ interface Expense {
 	startDate?: string | null;
 	isRecurring: boolean;
 	endDate?: string | null;
+	fundingSourceId?: number | null;
 }
 
 type NewExpense = Omit<Expense, 'id'>;
@@ -37,8 +41,8 @@ const db = new Dexie('v3') as Dexie & {
 
 // Schema declaration:
 db.version(1).stores({
-	funding_source: "++id, amount, description, currency, name",
-	expense: "++id, amount, description, currency, frequency, nextDueDate, startDate, isRecurring, endDate, name",
+	funding_source: "++id, amount, description, currency, name, isActive, createdAt, updatedAt",
+	expense: "++id, amount, description, currency, frequency, nextDueDate, startDate, isRecurring, endDate, name, fundingSourceId",
 });
 
 export type { FundingSource, Expense, NewFundingSource, NewExpense, Frequency };

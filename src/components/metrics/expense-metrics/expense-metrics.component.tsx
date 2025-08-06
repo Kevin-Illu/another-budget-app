@@ -1,27 +1,7 @@
-import { Card, CardContent } from "@mui/material";
 import { useExpenseMetrics } from "./expense.metrics";
 
 export default function expenseMetricsComponent() {
-  const { totalExpenses, averageExpense, highestExpense, lowestExpense, totalByFrequency, currency } = useExpenseMetrics();
-
-  const metrics = [
-    {
-      label: 'Total Expenses',
-      value: totalExpenses.toFixed(2),
-    },
-    {
-      label: 'Average Expense',
-      value: averageExpense.toFixed(2),
-    },
-    {
-      label: 'Highest Expense',
-      value: highestExpense.toFixed(2),
-    },
-    {
-      label: 'Lowest Expense',
-      value: lowestExpense.toFixed(2),
-    }
-  ]
+  const { totalByFrequency, currency } = useExpenseMetrics();
 
   return (
     <div className="expense-metrics">

@@ -37,16 +37,12 @@ function RouteComponent() {
 
       <div className='w-full flex justify-between items-start h-full pt-4 gap-8'>
         <div className='flex flex-col'>
-          <div className='mb-4'>
-            <ExpenseMetricsComponent />
-          </div>
           <Card className='p-8' sx={{ maxWidth: 600, width: '100%' }}>
             <ExpensesForm expense={expenseTemp} onSubmit={handleSubmit} />
           </Card>
         </div>
         <div className='flex-1 h-full w-full'>
           <div className='mb-4 h-full'>
-            <h3 className='text-lg font-semibold'>Expenses</h3>
             <ExpensesTable expenses={expenses} onDelete={removeExpense} onEdit={setExpenseTemp} />
           </div>
         </div>
