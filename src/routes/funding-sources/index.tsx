@@ -10,6 +10,7 @@ import type { FundingSource, NewFundingSource } from "../../infraestructure/data
 import FundingSourcesGrid from "../../components/funding-sources/funding-sources.grid.tsx";
 import FundingSourcesForm from '../../components/funding-sources/funding-sources.form.tsx';
 import FundingSourceUIState from '../../components/funding-sources/funding-source-ui.state.tsx';
+import { ExpensesSelectorGrid } from '../../components/expenses/expenses-selector.grid.tsx';
 
 export const Route = createFileRoute('/funding-sources/')({
 	component: RouteComponent,
@@ -90,18 +91,24 @@ function RouteComponent() {
 					<Box className="py-4"></Box>
 
 					<PanelGroup direction="horizontal" className='gap-2 w-full h-full min-h-full'>
-						<Panel defaultSize={40} minSize={30}>
-							<FundingSourcesGrid
-								fundingSources={fundingSources}
-								removeFundingSource={removeFundingSource}
-								onEdit={handleEdit} />
-						</Panel>
+						{isListing() && (
+							<Panel defaultSize={40} minSize={30}>
+								<FundingSourcesGrid
+									fundingSources={fundingSources}
+									removeFundingSource={removeFundingSource}
+									onEdit={handleEdit}
+									selectFundingSource={selectFundingSource}
+								/>
+							</Panel>
+						)}
 
 						{isSelecting() && (
 							<>
+								<Panel defaultSize={40} minSize={30} className='bg-gray-100'>
+								</Panel>
 								<PanelResizeHandle />
-								<Panel collapsible={true} collapsedSize={5} minSize={5}>
-									<Box className="bg-gray-50 rounded w-full h-full block border-2 border-dashed border-gray-200"></Box>
+								<Panel defaultSize={60} minSize={30} className='shadow-lg'>
+									<ExpensesSelectorGrid />
 								</Panel>
 							</>
 						)}

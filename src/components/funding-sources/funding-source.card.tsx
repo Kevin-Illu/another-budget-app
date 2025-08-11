@@ -2,29 +2,10 @@ import type { FundingSource } from "../../infraestructure/database/db";
 import { Chip, IconButton, Menu, MenuItem } from "@mui/material";
 import React, { useState } from "react";
 
-import { Calendar, Ellipsis, TrendingUp, Wallet } from "lucide-react";
+import { Blend, Calendar, Ellipsis, TrendingUp, Wallet } from "lucide-react";
 import { updateActiveStatus } from "../../services/fouding-sources.service";
-
-
-function formatCurrency(amount: number, currency: string) {
-  return new Intl.NumberFormat('es-GT', {
-    style: 'currency',
-    currency: currency,
-    minimumFractionDigits: 2,
-  }).format(amount);
-}
-
-function formatDate({ dateString, withTime = false }: { dateString: string | null, withTime?: boolean }): string {
-  if (!dateString) return 'No disponible';
-
-  const date = new Date(dateString);
-  return new Intl.DateTimeFormat('es-GT', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    ...(withTime && { hour: '2-digit', minute: '2-digit' }),
-  }).format(date);
-}
+import { formatCurrency } from "../../utils/money";
+import { formatDate } from "../../utils/date";
 
 const FundingSourcesOptionsButton = ({ children }: { children: (handleClose: () => void) => React.ReactNode; }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -68,10 +49,11 @@ const FundingSourcesOptionsButton = ({ children }: { children: (handleClose: () 
   );
 }
 
-export const FundingSourceCard = ({ fundingSource, removeFundingSource, onEdit }: {
+export const FundingSourceCard = ({ fundingSource, removeFundingSource, onEdit, selectFundingSource }: {
   fundingSource: FundingSource,
   removeFundingSource: (id: number) => void,
-  onEdit: (fs: FundingSource) => void
+  onEdit: (fs: FundingSource) => void,
+  selectFundingSource: (fs: FundingSource) => void,
 }) => {
   const { createdAt, updatedAt, name, description, id, isActive, currency, amount } = fundingSource;
 
@@ -101,6 +83,11 @@ export const FundingSourceCard = ({ fundingSource, removeFundingSource, onEdit }
           <FundingSourcesOptionsButton>
             {(handleClose) => (
               <>
+                <MenuItem onClick={() => { selectFundingSource(fundingSource); handleClose() }}>
+                  <div className="flex items-center justify-around w-full bg-gradient-to-r from-blue-200 to-cyan-200 p-0.5 rounded transition-colors hover:bg-gradient-to-r hover:from-cyan-200 hover:to-cyan-200">
+                    <span>Start budget</span> <Blend className="inline h-4 w-4 ml-1" />
+                  </div>
+                </MenuItem>
                 <MenuItem onClick={() => { onEdit(fundingSource); handleClose() }}>
                   <span>Edit</span>
                 </MenuItem>

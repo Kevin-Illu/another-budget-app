@@ -1,11 +1,12 @@
 import type { FundingSource } from "../../infraestructure/database/db.ts";
 import './funding-source.styles.css';
-import { FundingSourceCard } from "./funding-source-card.tsx";
+import { FundingSourceCard } from "./funding-source.card.tsx";
 
 export default function FundingSourcesGrid(props: {
 	fundingSources: FundingSource[] | undefined,
 	removeFundingSource: (id: number) => void,
-	onEdit: (fs: FundingSource) => void
+	onEdit: (fs: FundingSource) => void,
+	selectFundingSource: (fs: FundingSource) => void,
 }) {
 	const { fundingSources, ...propsComponent } = props;
 	return (
