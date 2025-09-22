@@ -1,7 +1,6 @@
 import { Box, Card } from '@mui/material'
 import { createFileRoute } from '@tanstack/react-router'
 import ExpensesForm from '../../components/expenses/expenses.form'
-import ExpenseMetricsComponent from '../../components/metrics/expense-metrics/expense-metrics.component'
 import type { Expense, NewExpense } from '../../infraestructure/database/db'
 import ExpensesTable from '../../components/expenses/expenses.table'
 import { addExpense, removeExpense, updateExpense, useExpenses } from '../../services/expenses.service'
@@ -20,6 +19,7 @@ function RouteComponent() {
 
     if (id) {
       updateExpense(id, values);
+      setExpenseTemp(null);
       return;
     }
 
@@ -27,6 +27,7 @@ function RouteComponent() {
       ...values,
       currency: "GTQ",
     })
+    setExpenseTemp(null);
   }
 
   return (

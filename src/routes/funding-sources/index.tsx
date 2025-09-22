@@ -11,20 +11,24 @@ import FundingSourcesGrid from "../../components/funding-sources/funding-sources
 import FundingSourcesForm from '../../components/funding-sources/funding-sources.form.tsx';
 import FundingSourceUIState from '../../components/funding-sources/funding-source-ui.state.tsx';
 import { ExpensesSelectorGrid } from '../../components/expenses/expenses-selector.grid.tsx';
+import { FS_UI_STATES, useFundingSourceStore } from '../../stores/funding-source-ui.store.ts';
 
 export const Route = createFileRoute('/funding-sources/')({
 	component: RouteComponent,
 })
 
 function FundingSourcesToolBar({ handleOpen }: { handleOpen: () => void }) {
+	const uiState = useFundingSourceStore.use.uiState();
 	return (
 		<div className='flex justify-between items-center text-gray-500'>
 			<h4>Your funding sources</h4>
 			<div>
-				<Button size='small' endIcon={<AddCardRoundedIcon />}
-					variant="text" color='inherit' onClick={handleOpen}>
-					<p>Add funding source</p>
-				</Button>
+				{uiState !== FS_UI_STATES.SELECTING && (
+					<Button size='small' endIcon={<AddCardRoundedIcon />}
+						variant="text" color='inherit' onClick={handleOpen}>
+						<p>Add funding source</p>
+					</Button>
+				)}
 			</div>
 		</div>
 	)

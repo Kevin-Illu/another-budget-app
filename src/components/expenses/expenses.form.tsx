@@ -4,6 +4,7 @@ import expenseSchema, { type ExpenseSchema } from "./expense.schema.ts";
 import { Button, FormControl, MenuItem, Select, Switch, TextField } from "@mui/material";
 import BackspaceRoundedIcon from '@mui/icons-material/BackspaceRounded';
 import { FrequencyList } from "../../infraestructure/consts.ts";
+import { useEffect } from "react";
 
 const getExpenseInitialValues = (expense: Expense | null): Expense => ({
 	id: expense?.id ?? 0,
@@ -12,10 +13,10 @@ const getExpenseInitialValues = (expense: Expense | null): Expense => ({
 	description: expense?.description ?? '',
 	currency: expense?.currency ?? 'GTQ',
 	frequency: expense?.frequency ?? 'daily',
-	nextDueDate: expense?.nextDueDate ?? null,
-	startDate: expense?.startDate ?? null,
+	nextDueDate: expense?.nextDueDate ?? '',
+	startDate: expense?.startDate ?? '',
 	isRecurring: expense?.isRecurring ?? false,
-	endDate: expense?.endDate ?? null,
+	endDate: expense?.endDate ?? '',
 	fundingSourceId: expense?.fundingSourceId ?? null
 });
 
@@ -40,15 +41,37 @@ export default function ExpensesForm(
 				fundingSourceId: values?.fundingSourceId ?? null,
 			});
 
-			const clearedValues = getExpenseInitialValues(null);
-
-			expenseForm.resetForm({
-				values: clearedValues,
-			});
+			clearForm();
 		}
 	});
 
-	const clearForm = () => getExpenseInitialValues(null);
+	useEffect(() => {
+		if (!expense) {
+			clearForm();
+			return;
+		}
+
+		expenseForm.setValues(getExpenseInitialValues(expense));
+		expenseForm.setTouched({
+			name: false,
+			amount: false,
+			description: false,
+			currency: false,
+			frequency: false,
+			nextDueDate: false,
+			startDate: false,
+			isRecurring: false,
+			endDate: false
+		});
+	}, [expense]);
+
+	const clearForm = () => {
+		const clearedValues = getExpenseInitialValues(null);
+
+		expenseForm.setValues({
+			...clearedValues,
+		});
+	};
 
 	return (
 		<form onSubmit={expenseForm.handleSubmit}>

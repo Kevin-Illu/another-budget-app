@@ -1,4 +1,12 @@
-function formatCurrency(amount: number, currency: string) {
+const SUPPORTED_CURRENCIES = {
+  GTQ: 'GTQ',
+  // USD: 'USD',
+} as const;
+
+type SupportedCurrency = typeof SUPPORTED_CURRENCIES[keyof typeof SUPPORTED_CURRENCIES];
+
+
+function formatCurrency(amount: number, currency: SupportedCurrency = SUPPORTED_CURRENCIES.GTQ): string {
   return new Intl.NumberFormat('es-GT', {
     style: 'currency',
     currency: currency,
@@ -8,4 +16,5 @@ function formatCurrency(amount: number, currency: string) {
 
 export {
   formatCurrency,
+  SUPPORTED_CURRENCIES,
 }
