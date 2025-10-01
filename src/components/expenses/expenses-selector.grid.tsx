@@ -70,9 +70,9 @@ export default function CheckboxList({ expenses, setChecked, checked }:
                 <BanknoteArrowDown className="text-red-500" />
               </ListItemIcon>
               <ListItemText id={labelId} primary={expense.name} secondary={
-                <div className="font-bold flex gap-1 items-center text-red-400">
-                  <Minus size={12} /><p>{formatCurrency(expense.amount)}</p>
-                </div>
+                <span className="font-bold flex gap-1 items-center text-red-400">
+                  <Minus size={12} /><i>{formatCurrency(expense.amount)}</i>
+                </span>
               } />
             </ListItemButton>
           </ListItem>

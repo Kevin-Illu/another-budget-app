@@ -43,7 +43,9 @@ const FundingSourcesOptionsButton = ({ children }: { children: (handleClose: () 
           },
         }}
       >
-        {children(handleClose)}
+        <div>
+          {children(handleClose)}
+        </div>
       </Menu>
     </div>
   );
